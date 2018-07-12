@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Design FAQ · Repromise</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## Why are JS promises not type-safe?"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Design FAQ · Repromise"/><meta property="og:type" content="website"/><meta property="og:url" content="https://aantron.github.io/repromise/repromise/index.html"/><meta property="og:description" content="## Why are JS promises not type-safe?"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/repromise/undefined"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/arduino-light.min.css"/><link rel="stylesheet" href="/repromise/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/repromise/"><h2 class="headerTitle">Repromise</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/repromise/docs/QuickStart" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/repromise/docs/API" target="_self">API</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li><li class=""><a href="https://github.com/aantron/repromise" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Intro</h3><ul><li class="navListItem"><a class="navItem" href="/repromise/docs/WhatWhy">What &amp; Why</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/QuickStart">Quick Start</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Reference</h3><ul><li class="navListItem"><a class="navItem" href="/repromise/docs/API">API</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Interop">Interop</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/RejectableAPI">Rejectable API</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/repromise/docs/DesignFAQ">Design FAQ</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Performance">Performance</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/aantron/repromise/tree/master/doc/docs/design.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">Design FAQ</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="why-are-js-promises-not-type-safe"></a><a href="#why-are-js-promises-not-type-safe" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why are JS promises not type-safe?</h2>
+<p>Functions like <code>Promise.resolve</code> have a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve">special check</a> for whether the value being put into a promise is another promise or not. It turns out that this check makes <code>Js.Promise.resolve</code> impossible to type in the ReasonML type system (and many other type systems).</p>
+<p>Here are the details. <a href="https://bucklescript.github.io/bucklescript/api/Js.Promise.html#VALresolve"><code>Js.Promise.resolve</code></a>, the BuckleScript binding to <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve"><code>Promise.resolve</code></a>, takes a value, and creates a promise that contains that value:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">Js</span>.Promise.resolve(<span class="hljs-number">1</span>) |&gt; <span class="hljs-keyword">Js</span>.log<span class="hljs-comment">;</span>
+/* Promise { <span class="hljs-number">1</span> } */
+
+<span class="hljs-keyword">Js</span>.Promise.resolve(<span class="hljs-string">"foo"</span>) |&gt; <span class="hljs-keyword">Js</span>.log<span class="hljs-comment">;</span>
+/* Promise { <span class="hljs-string">"foo"</span> } */
+</code></pre>
+<p>So, we would want to give it the type</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-type">Js</span>.<span class="hljs-type">Promise</span>.resolve: <span class="hljs-symbol">'a</span> =&gt; <span class="hljs-type">Js</span>.<span class="hljs-type">Promise</span>.t(<span class="hljs-symbol">'a</span>);
+/* resolve takes anything, <span class="hljs-keyword">and</span> wraps it up <span class="hljs-keyword">in</span> a promise. */
+</code></pre>
+<p>and, indeed, that is <a href="https://bucklescript.github.io/bucklescript/api/Js.Promise.html#VALresolve">the type it has in the docs</a>.</p>
+<p>The type system allows replacing both <code>'a</code>s with a specific, single type each time <code>resolve</code> is used. So, in the above examples,</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">Js</span>.Promise.resolve(<span class="hljs-number">1</span>) |&gt; <span class="hljs-keyword">Js</span>.log<span class="hljs-comment">;</span>
+/* resolve: <span class="hljs-keyword">int</span> =&gt; <span class="hljs-keyword">Js</span>.Promise.t(<span class="hljs-keyword">int</span>) */
+
+<span class="hljs-keyword">Js</span>.Promise.resolve(<span class="hljs-string">"foo"</span>) |&gt; <span class="hljs-keyword">Js</span>.log<span class="hljs-comment">;</span>
+/* resolve: string =&gt; <span class="hljs-keyword">Js</span>.Promise.t(string) */
+</code></pre>
+<p>Following this pattern, if we try to <strong>nest</strong> a child promise inside a promise, we would expect to get:</p>
+<pre><code class="hljs css languages- reason">let child = <span class="hljs-keyword">Js</span>.Promise.resolve(<span class="hljs-number">1</span>)<span class="hljs-comment">;</span>
+
+<span class="hljs-keyword">Js</span>.Promise.resolve(child) |&gt; <span class="hljs-keyword">Js</span>.log<span class="hljs-comment">;</span>
+/* Promise { Promise { <span class="hljs-number">1</span> } } */
+/* resolve: <span class="hljs-keyword">Js</span>.Promise.t(<span class="hljs-keyword">int</span>) =&gt; <span class="hljs-keyword">Js</span>.Promise.t(<span class="hljs-keyword">Js</span>.Promise.t(<span class="hljs-keyword">int</span>)) */
+</code></pre>
+<p>However, the actual output is</p>
+<pre><code class="hljs css languages- reason">Js.Promise.resolve(child) |&gt; Js.<span class="hljs-built_in">log</span>;
+<span class="hljs-comment">/* Promise { 1 } */</span>
+</code></pre>
+<p>This is because <code>Promise.resolve</code> <a href="https://bucklescript.github.io/bucklescript/api/Js.Promise.html#VALresolve">checks</a> for whether its argument is a promise (or any &quot;thenable&quot;, <code>child</code> in this case). If so, <code>Promise.resolve</code> takes the value <strong>inside</strong> <code>child</code> out, and puts only that value into the final promise. If not for this special check, <code>Promise.resolve</code> would put the <strong>whole</strong> promise <code>child</code> into the final promise.</p>
+<p>The Reason type system has no way to express this special case, so the type assigned by Reason,</p>
+<pre><code class="hljs css languages- reason">resolve: Js<span class="hljs-selector-class">.Promise</span><span class="hljs-selector-class">.t</span>(int) =&gt; Js<span class="hljs-selector-class">.Promise</span><span class="hljs-selector-class">.t</span>(Js<span class="hljs-selector-class">.Promise</span><span class="hljs-selector-class">.t</span>(int))
+</code></pre>
+<p>is incorrect, because the return type says that <code>child</code> will be nested.</p>
+<p>This is why Repromise provides its own <a href="API#resolve"><code>Repromise.resolve</code></a>, which basically prevents the check from running. The type of <a href="API#resolve"><code>Repromise.resolve</code></a> is correct even when nesting promises.s</p>
+<p>Repromise also has to provide <a href="API#then">its own versions</a> of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"><code>then</code></a> and the other <code>Promise</code> functions, because they have to know how to deal with the workaround used by Repromise.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="why-does-js-have-only-then-but-repromise-has-then-map-and-wait"></a><a href="#why-does-js-have-only-then-but-repromise-has-then-map-and-wait" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why does JS have only <code>then</code>, but Repromise has <code>then_</code>, <code>map</code>, and <code>wait</code>?</h2>
+<p>In JavaScript, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"><code>Promise.then</code></a> behaves differently depending on the (dynamic) type of the value returned by its callback. These different behaviors can't be assigned one type, so <code>then</code> is split into <code>then_</code>, <code>map</code>, and <code>wait</code>.</p>
+<ol>
+<li><p>The most general behavior occurs when the callback returns another promise. This allows chaining asynchronous operations:</p>
+<pre><code class="hljs css languages- js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inOneSecond</span>(<span class="hljs-params">resolve</span>) </span>{ setTimeout(resolve, <span class="hljs-number">1000</span>); };
+
+(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(inOneSecond))
+.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"one second elapsed"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(inOneSecond);
+})
+.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"two seconds elapsed"</span>);
+});
+</code></pre>
+<p>The first <code>.then</code> is the important one. Its callback returns a new promise, and the chain of asynchronous operations continues by waiting for that promise.</p>
+<p>This corresponds to <a href="API#then"><code>Repromise.then_</code></a>, whose callback returns a promise.</p></li>
+<li><p>JS promises support another behavior, which occurs when the callback of <code>.then</code> returns a non-promise value. In this case, the value is directly passed to the next <code>.then</code> in the chain:</p>
+<pre><code class="hljs css languages- js">(<span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">42</span>))
+.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+    <span class="hljs-keyword">return</span> value + <span class="hljs-number">1</span>;
+})
+.then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(value);
+});
+</code></pre>
+<p>Again, the first <code>.then</code> is the important one. Since its callback does not return a promise, the chain doesn't have to wait. It continues (almost) immediately into the second <code>.then</code>, which prints <code>43</code>.</p>
+<p><a href="API#then"><code>Repromise.then_</code></a> can't be used for this <code>.then</code>, because the callback of <a href="API#then"><code>Repromise.then_</code></a> must return a promise. Reason's type system won't allow returning a non-promise value.</p>
+<p>So, for this case, Repromise provides <a href="API#map"><code>Repromise.map</code></a>, whose callback can return a non-promise value.</p></li>
+<li><p>A special case of (2) is when the callback is only used to know that a promise has resolved. This kind of callback usually doesn't have an explicit <code>return</code> statement (i.e., it returns <code>undefined</code>):</p>
+<pre><code class="hljs">(<span class="hljs-name"><span class="hljs-builtin-name">new</span></span> Promise(<span class="hljs-name">function</span>(<span class="hljs-name"><span class="hljs-builtin-name">resolve</span></span>) { setTimeout(<span class="hljs-name"><span class="hljs-builtin-name">resolve</span></span>, <span class="hljs-number">1000</span>)<span class="hljs-comment">; }))</span>
+.then(<span class="hljs-name">function</span>() {
+    console.log(<span class="hljs-string">"one second elapsed"</span>)<span class="hljs-comment">;</span>
+})<span class="hljs-comment">;</span>
+</code></pre>
+<p>Using <a href="API#map"><code>Repromise.map</code></a> for this is awkward, because Reason's type system forces us to return a value from the callback, and also to call <code>ignore</code> on the final promise that <code>map</code> generates.</p>
+<p>To avoid that, Repromise provides <a href="API#wait"><code>Repromise.wait</code></a>.</p></li>
+</ol>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="why-use-instead-of"></a><a href="#why-use-instead-of" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why use <code>|&gt;</code> instead of <code>|.</code>?</h2>
+<p>Repromise has a native implementation, which needs to compile on OCaml, and OCaml supports only <code>|&gt;</code>.</p>
+<p>We may upstream <code>|.</code> to OCaml, and then change Repromise over to use it.</p>
+<p>See <a href="https://github.com/aantron/repromise/issues/22#issuecomment-405589951">this post</a> and <a href="https://github.com/aantron/repromise/issues/22#issuecomment-405677694">this post</a> for discussion.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="why-do-new-and-then-have-underscores"></a><a href="#why-do-new-and-then-have-underscores" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why do <code>new_</code> and <code>then_</code> have underscores?</h2>
+<p>The regular <code>new</code> is a keyword in Reason.</p>
+<p><code>then</code> is not a keyword in Reason, but Reason is supposed to still parse when transformed to OCaml, and <code>then</code> is a keyword in OCaml.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="why-is-there-repromise-when-there-are-already-lwt-and-async"></a><a href="#why-is-there-repromise-when-there-are-already-lwt-and-async" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why is there Repromise, when there are already Lwt and Async?</h2>
+<p><a href="https://github.com/ocsigen/lwt">Lwt</a> and <a href="https://github.com/janestreet/async">Async</a> are two promise libraries from OCaml's native ecosystem.</p>
+<p>Their semantics are pretty different from JS promises, and they don't offer JS interop. This is why Repromise was created.</p>
+<p>The semantics of Lwt are relatively close to Repromise, however, so the native implementation of Repromise may eventually have interop with Lwt.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="is-there-an-async-await-syntax-for-repromise"></a><a href="#is-there-an-async-await-syntax-for-repromise" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Is there an <code>async</code>/<code>await</code> syntax for Repromise?</h2>
+<p>Yes. It is unreleased, but <a href="https://github.com/aantron/repromise/tree/master/src/ppx">sitting in the Repromise repo</a>. It looks like this:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-title">let</span>%await fd   = <span class="hljs-type">Io</span>.open_(<span class="hljs-string">"test/demo/demo.re"</span>);
+<span class="hljs-title">let</span>%await <span class="hljs-class"><span class="hljs-keyword">data</span> = <span class="hljs-type">Io</span>.read (~<span class="hljs-title">fd</span>, ~<span class="hljs-title">length</span> = 1024);</span>
+<span class="hljs-title">print_endline</span>(<span class="hljs-class"><span class="hljs-keyword">data</span>);</span>
+<span class="hljs-type">Repromise</span>.resolve();
+</code></pre>
+<p><br/></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/repromise/docs/RejectableAPI">← Rejectable API</a><a class="docs-next button" href="/repromise/docs/Performance">Performance →</a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#why-are-js-promises-not-type-safe">Why are JS promises not type-safe?</a></li><li><a href="#why-does-js-have-only-then-but-repromise-has-then-map-and-wait">Why does JS have only <code>then</code>, but Repromise has <code>then_</code>, <code>map</code>, and <code>wait</code>?</a></li><li><a href="#why-use-instead-of">Why use <code>|&gt;</code> instead of <code>|.</code>?</a></li><li><a href="#why-do-new-and-then-have-underscores">Why do <code>new_</code> and <code>then_</code> have underscores?</a></li><li><a href="#why-is-there-repromise-when-there-are-already-lwt-and-async">Why is there Repromise, when there are already Lwt and Async?</a></li><li><a href="#is-there-an-async-await-syntax-for-repromise">Is there an <code>async</code>/<code>await</code> syntax for Repromise?</a></li></ul></nav></div><span></span></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+              var search = docsearch({
+                
+                apiKey: 'e0a7347e16ff47590833503d435facf2',
+                indexName: 'repromise',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

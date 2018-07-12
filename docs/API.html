@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>API · Repromise</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;br/&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="API · Repromise"/><meta property="og:type" content="website"/><meta property="og:url" content="https://aantron.github.io/repromise/repromise/index.html"/><meta property="og:description" content="&lt;br/&gt;"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/repromise/undefined"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/arduino-light.min.css"/><link rel="stylesheet" href="/repromise/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/repromise/"><h2 class="headerTitle">Repromise</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/repromise/docs/QuickStart" target="_self">Docs</a></li><li class="siteNavGroupActive siteNavItemActive"><a href="/repromise/docs/API" target="_self">API</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li><li class=""><a href="https://github.com/aantron/repromise" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Reference</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Intro</h3><ul><li class="navListItem"><a class="navItem" href="/repromise/docs/WhatWhy">What &amp; Why</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/QuickStart">Quick Start</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Reference</h3><ul><li class="navListItem navListItemActive"><a class="navItem" href="/repromise/docs/API">API</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Interop">Interop</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/RejectableAPI">Rejectable API</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/DesignFAQ">Design FAQ</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Performance">Performance</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/aantron/repromise/tree/master/doc/docs/api.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">API</h1></header><article><div><span><p><br/></p>
+<p>Most of the functions on this page have examples. The easiest way to try them is to clone the <a href="https://github.com/aantron/repromise-example-bsb">Repromise example repo</a>, and paste the code into <code>main.re</code>.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="type-repromiset"></a><a href="#type-repromiset" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Type <code>Repromise.t</code></h2>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">type</span> <span class="hljs-type">Repromise</span>.t('a);
+</code></pre>
+<p>The type of promises that can be resolved with values of type <code>'a</code>. For example, an object of type <code>Repromise.t(int)</code> is a Repromise that is either pending (doesn't yet have a value), or resolved with an <code>int</code>.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="new"></a><a href="#new" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>new_</code></h2>
+<pre><code class="hljs css languages- reason">new_: <span class="hljs-built_in">unit</span> =&gt; (<span class="hljs-type">Repromise</span>.t(<span class="hljs-symbol">'a</span>), (<span class="hljs-symbol">'a</span> =&gt; <span class="hljs-built_in">unit</span>))
+</code></pre>
+<p>Returns a tuple of a new pending promise, and a function for resolving it:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> (p, resolve<span class="hljs-number">_p</span>) = Repromise.<span class="hljs-keyword">new</span><span class="hljs-number">_</span>();
+</code></pre>
+<p><code>p</code> starts out pending. After calling <code>resolve_p</code>,</p>
+<pre><code class="hljs css languages- reason">resolve_p(<span class="hljs-string">"Hello"</span>)<span class="hljs-comment">;</span>
+</code></pre>
+<p><code>p</code> is resolved with <code>&quot;Hello&quot;</code>. Any callbacks that have been attached to <code>p</code> by <a href="#wait"><code>wait</code></a>, <a href="#map"><code>map</code></a>, <a href="#then"><code>then_</code></a>, <a href="#all"><code>all</code></a>, or <a href="#race"><code>race</code></a>, get called, and receive <code>&quot;Hello&quot;</code> as their argument. See examples in the rest of the documentation below.</p>
+<p>Each promise can only be resolved once, so calling <code>resolve_p</code> again has no effect.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="resolve"></a><a href="#resolve" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>resolve</code></h2>
+<pre><code class="hljs css languages- reason"><span class="hljs-built_in">resolve</span>: <span class="hljs-string">'a =&gt; Repromise.t('</span><span class="hljs-keyword">a</span>)
+</code></pre>
+<p>Returns a promise that starts out resolved, with the given value:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-attribute">let p</span> = Repromise.resolved(<span class="hljs-string">"Hello"</span>);
+</code></pre>
+<p>This is basically the same as</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> (p, resolve<span class="hljs-number">_p</span>) = Repromise.<span class="hljs-keyword">new</span><span class="hljs-number">_</span>();
+resolve<span class="hljs-number">_p</span>(<span class="hljs-string">"Hello"</span>);
+</code></pre>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="wait"></a><a href="#wait" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>wait</code></h2>
+<pre><code class="hljs css languages- reason">wait: ((<span class="hljs-symbol">'a</span> =&gt; <span class="hljs-built_in">unit</span>), <span class="hljs-type">Repromise</span>.t(<span class="hljs-symbol">'a</span>)) =&gt; <span class="hljs-built_in">unit</span>
+</code></pre>
+<p>Attaches a callback to the promise, which will be called after that promise is resolved:</p>
+<ul>
+<li><p>If the promise is already resolved, the callback is called on the next tick (almost immediately):</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> p = Repromise.resolve(<span class="hljs-string">"Hello"</span>);
+p |<span class="hljs-type">&gt; Repromise</span>.wait(text =&gt; print_endline(text));
+/* Prints <span class="hljs-string">"Hello"</span>. */
+</code></pre></li>
+<li><p>If the promise is pending and gets resolved later, the callback is called at that time:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> (p, resolve_p) = Repromise.new_();
+p |<span class="hljs-type">&gt; Repromise</span>.wait(text =&gt; print_endline(text));
+/* Doesn't print anything yet! */
+
+Js.<span class="hljs-keyword">Global</span>.setTimeout(() =&gt; resolve_p(<span class="hljs-string">"Hello"</span>), <span class="hljs-number">1000</span>) |<span class="hljs-type">&gt; ignore</span>;
+/* Prints <span class="hljs-string">"Hello"</span> <span class="hljs-built_in">after</span> one second. */
+</code></pre></li>
+<li><p>If the promise is pending, but never gets resolved, the callback is never called.</p></li>
+</ul>
+<p>Callbacks are always asynchronous. Even if a callback is queued on a promise that is already resolved, it is run later, on the next tick. This can lead to surprising execution orders:</p>
+<pre><code class="hljs css languages- reason">Repromise.resolve()
+|&gt; Repromise.wait(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> print_endline(<span class="hljs-string">"printed second"</span>));
+
+print_endline(<span class="hljs-string">"printed first"</span>);
+</code></pre>
+<p>The <code>wait</code> call only schedules its callback to run later, on the next tick. The <code>print_endline</code> below <code>wait</code> is executed immediately, however.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="map"></a><a href="#map" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>map</code></h2>
+<pre><code class="hljs css languages- reason">map: <span class="hljs-function">(<span class="hljs-params">(<span class="hljs-string">'a =&gt; '</span>b)</span>, Repromise.t<span class="hljs-params">(<span class="hljs-string">'a)) =&gt; Repromise.t('</span>b)</span>
+</span></code></pre>
+<p>Transforms the value in a promise, once the promise is resolved:</p>
+<pre><code class="hljs css languages- reason">let (p, resolve_p) = Repromise.new_();
+
+p
+|&gt; Repromise.<span class="hljs-keyword">map</span>(<span class="hljs-literal">text</span> =&gt; <span class="hljs-literal">text</span> ++ <span class="hljs-string">", world!"</span>)
+|&gt; Repromise.<span class="hljs-keyword">wait</span>(print_endline);
+<span class="hljs-comment">/* None of the callbacks have been called yet. */</span>
+
+resolve_p(<span class="hljs-string">"Hello"</span>);
+<span class="hljs-comment">/* Prints "Hello, world!" */</span>
+</code></pre>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="then"></a><a href="#then" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>then_</code></h2>
+<pre><code class="hljs css languages- reason">then_: <span class="hljs-function">(<span class="hljs-params">(<span class="hljs-string">'a =&gt; Repromise.t('</span>b)</span>), Repromise.t<span class="hljs-params">(<span class="hljs-string">'a)) =&gt; Repromise.t('</span>b)</span>
+</span></code></pre>
+<p>Like <a href="#map"><code>map</code></a>, but the return value of the callback is another promise. This allows the callback to start an async operation:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> (p1, resolve_p1) = Repromise.new_();
+Js.<span class="hljs-keyword">Global</span>.setTimeout(() =&gt; resolve_p1(), <span class="hljs-number">1000</span>) |<span class="hljs-type">&gt; ignore</span>;
+
+p1
+|<span class="hljs-type">&gt; Repromise</span>.then_(() =&gt; {
+  print_endline(<span class="hljs-string">"Hello"</span>);
+
+  <span class="hljs-keyword">let</span> (p2, resolve_p2) = Repromise.new_();
+  Js.<span class="hljs-keyword">Global</span>.setTimeout(() =&gt; resolve_p2(), <span class="hljs-number">1000</span>) |<span class="hljs-type">&gt; ignore</span>;
+  p2
+})
+|<span class="hljs-type">&gt; Repromise</span>.wait(() =&gt; {
+    print_endline(<span class="hljs-string">"world!"</span>);
+});
+/* Prints <span class="hljs-string">"Hello"</span> <span class="hljs-built_in">after</span> one second, <span class="hljs-keyword">then</span> <span class="hljs-string">"world!"</span> <span class="hljs-built_in">after</span> another second. */
+</code></pre>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="all"></a><a href="#all" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>all</code></h2>
+<pre><code class="hljs css languages- reason">all: <span class="hljs-built_in">list</span>(<span class="hljs-type">Repromise</span>.t(<span class="hljs-symbol">'a</span>)) =&gt; <span class="hljs-type">Repromise</span>.t(<span class="hljs-built_in">list</span>(<span class="hljs-symbol">'a</span>))
+</code></pre>
+<p>Creates a promise which resolves when <strong>all</strong> the given promises resolve:</p>
+<pre><code class="hljs css languages- reason"><span class="hljs-keyword">let</span> (p1, resolve_p1) = Repromise.new_();
+<span class="hljs-keyword">let</span> (p2, resolve_p2) = Repromise.new_();
+
+Repromise.all([p1, p2])
+|<span class="hljs-type">&gt; Repromise</span>.wait(texts =&gt;
+  texts |<span class="hljs-type">&gt; String</span>.concat(<span class="hljs-string">", "</span>) |<span class="hljs-type">&gt; print_endline</span>);
+
+resolve_p1(<span class="hljs-string">"Hello"</span>);
+resolve_p2(<span class="hljs-string">"world!"</span>);
+/* Prints <span class="hljs-string">"Hello, world!"</span> */
+</code></pre>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="race"></a><a href="#race" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>race</code></h2>
+<pre><code class="hljs css languages- reason">race: list<span class="hljs-comment">(Repromise.t('a)</span>) =&gt; promise<span class="hljs-comment">('a)</span>
+</code></pre>
+<p>Creates a promise which resolves when <strong>one</strong> of the given promises resolves:</p>
+<pre><code class="hljs css languages- reason">let (p1, resolve_p1) = Repromise.new_();
+let (p2, resolve_p2) = Repromise.new_();
+
+Repromise.race([p1, p2])
+|&gt; Repromise.wait(print_endline);
+
+resolve_p1(<span class="hljs-string">"Hello"</span>);
+resolve_p2(<span class="hljs-string">"world!"</span>);
+/* Prints only <span class="hljs-string">"Hello"</span>. */
+</code></pre>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="onunhandledexception"></a><a href="#onunhandledexception" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>onUnhandledException</code></h2>
+<pre><code class="hljs css languages- reason">onUnhandledException: <span class="hljs-built_in">ref</span>(<span class="hljs-built_in">exn</span> =&gt; never)
+</code></pre>
+<p>When a callback called by Repromise (such as what you pass to <a href="#wait"><code>wait</code></a>) raises an exception, the exception is passed to <code>Repromise.onUnhaldedException^</code>.</p>
+<p>When your program starts, <code>Repromise.onUnhandledException</code> contains a function which prints the exception, and terminates the program. Replace the reference to change this behavior.</p>
+<p>In the future, we will want to design a wiser approach to asynchronous exception handling. See <a href="https://github.com/aantron/repromise/issues/16">https://github.com/aantron/repromise/issues/16</a> for a discussion.</p>
+<p><br/></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/repromise/docs/QuickStart">← Quick Start</a><a class="docs-next button" href="/repromise/docs/Interop">Interop →</a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#type-repromiset">Type <code>Repromise.t</code></a></li><li><a href="#new"><code>new_</code></a></li><li><a href="#resolve"><code>resolve</code></a></li><li><a href="#wait"><code>wait</code></a></li><li><a href="#map"><code>map</code></a></li><li><a href="#then"><code>then_</code></a></li><li><a href="#all"><code>all</code></a></li><li><a href="#race"><code>race</code></a></li><li><a href="#onunhandledexception"><code>onUnhandledException</code></a></li></ul></nav></div><span></span></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+              var search = docsearch({
+                
+                apiKey: 'e0a7347e16ff47590833503d435facf2',
+                indexName: 'repromise',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

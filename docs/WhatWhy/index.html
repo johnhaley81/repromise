@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>What &amp; Why · Repromise</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;br/&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="What &amp; Why · Repromise"/><meta property="og:type" content="website"/><meta property="og:url" content="https://aantron.github.io/repromise/repromise/index.html"/><meta property="og:description" content="&lt;br/&gt;"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/repromise/undefined"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/arduino-light.min.css"/><link rel="stylesheet" href="/repromise/css/main.css"/></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/repromise/"><h2 class="headerTitle">Repromise</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/repromise/docs/QuickStart" target="_self">Docs</a></li><li class="siteNavGroupActive"><a href="/repromise/docs/API" target="_self">API</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li><li class=""><a href="https://github.com/aantron/repromise" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><i></i></div><h2><i>›</i><span>Intro</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Intro</h3><ul><li class="navListItem navListItemActive"><a class="navItem" href="/repromise/docs/WhatWhy">What &amp; Why</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/QuickStart">Quick Start</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Reference</h3><ul><li class="navListItem"><a class="navItem" href="/repromise/docs/API">API</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Interop">Interop</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/RejectableAPI">Rejectable API</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/DesignFAQ">Design FAQ</a></li><li class="navListItem"><a class="navItem" href="/repromise/docs/Performance">Performance</a></li></ul></div></div></section></div><script>
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              const headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A') {
+                  document.body.classList.remove('tocActive');
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><a class="edit-page-link button" href="https://github.com/aantron/repromise/tree/master/doc/docs/whatwhy.md" target="_blank" rel="noreferrer noopener">Edit</a><h1 class="postHeaderTitle">What &amp; Why</h1></header><article><div><span><p><br/></p>
+<p>Repromise is a binding to JavaScript promises that is:</p>
+<ul>
+<li><strong>minimal</strong>: Repromise objects are JavaScript promises, and</li>
+<li><strong>type-safe</strong>: the Repromise library provides safe replacements for JavaScript's unsafe promise methods.</li>
+</ul>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="reusing-promise-objects"></a><a href="#reusing-promise-objects" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reusing <code>Promise</code> objects</h2>
+<p>JS <code>Promise</code> objects are basically ok, so Repromise reuses them. This has two advantages:</p>
+<ul>
+<li><strong>interop</strong>: any JS library that uses JS promises also uses Repromises, because they are the same thing, and</li>
+<li><strong>tooling</strong> for <code>Promise</code> developed in the JS ecosystem can be used with Repromises.</li>
+</ul>
+<p>See <a href="Interop">Interop</a> for details.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="replacing-promise-methods"></a><a href="#replacing-promise-methods" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Replacing <code>Promise</code> methods</h2>
+<p>JS <code>Promise</code> methods, such as <code>Promise.resolve</code>, have <a href="DesignFAQ#why-are-js-promises-not-type-safe">behavior</a> that is incompatible with ReasonML's type system (and almost any other type system). So, Repromise provides its own safe functions, such as <a href="API#resolve"><code>Repromise.resolve</code></a>.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="other-differences"></a><a href="#other-differences" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other differences</h2>
+<p>Since Repromise is changing the methods, we also have the opportunity to make some different design decisions, such as dropping rejection in favor of explicit error handling.</p>
+<p><br/></p>
+<h2><a class="anchor" aria-hidden="true" id="native-promises"></a><a href="#native-promises" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Native promises</h2>
+<p>Repromise also has a <a href="https://github.com/aantron/repromise/blob/master/src/native/repromise.re">native implementation</a>, written in pure ReasonML, but it is not yet released.</p>
+<p><br/></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-next button" href="/repromise/docs/QuickStart">Quick Start →</a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#reusing-promise-objects">Reusing <code>Promise</code> objects</a></li><li><a href="#replacing-promise-methods">Replacing <code>Promise</code> methods</a></li><li><a href="#other-differences">Other differences</a></li><li><a href="#native-promises">Native promises</a></li></ul></nav></div><span></span></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+              var search = docsearch({
+                
+                apiKey: 'e0a7347e16ff47590833503d435facf2',
+                indexName: 'repromise',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
